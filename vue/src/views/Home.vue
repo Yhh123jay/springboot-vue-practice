@@ -74,7 +74,7 @@
       </el-scrollbar>
     </el-aside>
 
-    <el-container>   
+    <el-container style="margin-left: 2px">   
       <el-header style="font-size: 12px; display:flex; align-items: center">
         <div style="flex :1; font-size:18px"> 
           <span @click="collapse" >
@@ -102,9 +102,9 @@
           </el-breadcrumb>        
           <el-scrollbar>
           <div style="margin: 10px 0">
-              <el-input v-model="input" placeholder="请输入名称" style="width: 200px" :prefix-icon="Search"/>
-              <el-input v-model="input" placeholder="请输入地址" style="width: 200px; margin-left: 5px" :prefix-icon="Position"/>
-              <el-input v-model="input" placeholder="请输入邮箱" style="width: 200px; margin-left: 5px" :prefix-icon="Message"/>
+              <el-input  placeholder="请输入名称" style="width: 200px" :prefix-icon="Search"/>
+              <el-input  placeholder="请输入地址" style="width: 200px; margin-left: 5px" :prefix-icon="Position"/>
+              <el-input  placeholder="请输入邮箱" style="width: 200px; margin-left: 5px" :prefix-icon="Message"/>
               <el-button type="primary" style="margin-left: 5px">搜索</el-button>
           </div>
           <div style="margin:10px 0">
@@ -113,25 +113,30 @@
             <el-button type="primary" style="margin-left: 5px" :icon="Bottom">导入</el-button>
             <el-button type="primary" style="margin-left: 5px" :icon="Top">导出</el-button>
           </div>
+
           <el-table :data="tableData">
-            <el-table-column prop="date" label="日期" width="140" />
-            <el-table-column prop="name" label="姓名" width="120" />
+            <el-table-column prop="id" label="id" width="80" />
+            <el-table-column prop="username" label="用户名" width="140" />
+            <el-table-column prop="nickname" label="姓名" width="120" />
+            <el-table-column prop="email" label="邮箱" />
+            <el-table-column prop="phone" label="电话" />
             <el-table-column prop="address" label="地址" />
+
             <el-table-column label="操作">              
               <el-button type="success" :icon="Edit">编辑</el-button>
               <el-button type="danger" :icon="Delete">删除</el-button>
-            </el-table-column>
+            </el-table-column>    
           </el-table>
           <div style="padding 10px 0">
              <el-pagination
-              v-model:current-page="currentPage4"
-              v-model:page-size="pageSize4"
-              :page-sizes="[5, 10, 15, 20]"
+              :current-page="currentPage"
+              :page-size="pageSize"
+              :page-sizes="[2, 5, 8, 10]"
               :small="small"
               :disabled="disabled"
               :background="background"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400"
+              :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
             />
@@ -144,18 +149,46 @@
 </template>
 
 <script setup>
-  import {reactive, ref, shallowRef} from 'vue'
+  import {reactive, ref, shallowRef,onMounted} from 'vue'
   import {Menu as IconMenu, Message, Setting, Fold, ArrowDown, Expand,Search,Position,Plus,Minus,Bottom,Top,Edit,Delete} from '@element-plus/icons-vue'
   import * as Icon from '@element-plus/icons-vue'
 
-  const item = {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
+  //接受数据
+  let total = ref(0);
+  let tableData = ref([])
+  let currentPage = ref(1);
+  let pageSize = ref(3);
+  let small = ref(false)
+  const background = ref(false)
+  const disabled = ref(false)
+
+  function load(){
+    fetch(`http://localhost:9090/user/page?pageNum=${currentPage.value}&pageSize=${pageSize.value}`).then(res => res.json()).then(res => {
+      console.log(res)
+      tableData.value = res.data;
+      total.value = res.total;
+    })
   }
-  const tableData = ref(Array.from({ length: 20 }).fill(item))
+  //组件挂载时显示
+  onMounted(()=>{
+    load()
+  })
 
+  //分页处理,当每页数量变化时触发
+  function handleSizeChange(_pageSize){
+    console.log("val1",_pageSize)
+    pageSize.value = _pageSize;
+    load()
+  }
 
+  //当前页改变时触发
+  function handleCurrentChange(_currentPage){
+    console.log("val2",_currentPage)
+    currentPage.value = _currentPage;
+    load()
+  }
+
+  //处理收缩的数据和方法
   let isCollapse = ref(false);
   let sideWidth = ref(200);
   let logoTextShow = ref(true);
