@@ -102,9 +102,9 @@
           </el-breadcrumb>        
           <el-scrollbar>
           <div style="margin: 10px 0">
-              <el-input  placeholder="请输入名称" style="width: 200px" :prefix-icon="Search"/>
-              <el-input  placeholder="请输入地址" style="width: 200px; margin-left: 5px" :prefix-icon="Position"/>
-              <el-input  placeholder="请输入邮箱" style="width: 200px; margin-left: 5px" :prefix-icon="Message"/>
+              <el-input v-model="username" placeholder="请输入名称" style="width: 200px" :prefix-icon="Search"/>
+              <el-input v-model="email" placeholder="请输入邮箱" style="width: 200px; margin-left: 5px" :prefix-icon="Position"/>
+              <el-input v-model="address" placeholder="请输入地址" style="width: 200px; margin-left: 5px" :prefix-icon="Message"/>
               <el-button type="primary" style="margin-left: 5px">搜索</el-button>
           </div>
           <div style="margin:10px 0">
@@ -159,8 +159,12 @@
   let currentPage = ref(1);
   let pageSize = ref(3);
   let small = ref(false)
+  let username = ref("")
+  let email = ref("")
+  let address = ref("")
   const background = ref(false)
   const disabled = ref(false)
+
 
   function load(){
     fetch(`http://localhost:9090/user/page?pageNum=${currentPage.value}&pageSize=${pageSize.value}`).then(res => res.json()).then(res => {

@@ -75,3 +75,5 @@ list.arr //使用方式
 
 代替postman进行接口测试
 
+8、axios发送ajax请求
+
