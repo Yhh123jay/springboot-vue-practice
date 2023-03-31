@@ -1,5 +1,6 @@
 package com.yhh.springboot.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yhh.springboot.entity.User;
 import com.yhh.springboot.mapper.UserMapper;
 import com.yhh.springboot.service.UserService;
@@ -14,26 +15,26 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserMapper userMapper;
+//    @Autowired
+//    private UserMapper userMapper;
     @Autowired
     private UserService userService;
     //查询所有数据
     @GetMapping("/")
     public List<User> index(){
-        return userMapper.selectAll();
+        return userService.selectAll();
     }
 
     //新增和修改
     @PostMapping
-    public Integer save(@RequestBody User user){
+    public boolean saveUser(@RequestBody User user){
         return userService.save(user);
     }
 
     //删除
     @DeleteMapping("/{id}")
-    public Integer deleteUser(@PathVariable("id") Integer id){
-        return userMapper.deleteUserById(id);
+    public boolean deleteUser(@PathVariable("id") Integer id){
+        return userService.removeById(id);
     }
 
     //分页查询,通过sql语句来实现
@@ -41,8 +42,12 @@ public class UserController {
     //使用RequestParam接受参数
     //(pageNum-1)*pageSize  pageSize
     @GetMapping("/page")
-    public Map<String,Object> queryUserWithPage(@RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize){
-        return userService.queryUserWithPage(pageNum,pageSize);
+    public IPage<User> queryUserWithPage(@RequestParam("pageNum") Integer pageNum,
+                                         @RequestParam(value = "pageSize") Integer pageSize,
+                                         @RequestParam(value = "userName",defaultValue = "") String userName,
+                                         @RequestParam(value = "email",defaultValue = "") String email,
+                                         @RequestParam(value = "address",defaultValue = "") String address){
+        return userService.queryUserWithPage(pageNum,pageSize,userName,email,address);
     }
 
 }

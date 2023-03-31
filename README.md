@@ -51,6 +51,27 @@ private String password;
 5、vue3实现数组响应式
 
 ```js
+//方法一
 let tableData = ref([])
+//取数据需要.value
+tableData.value = res.data;
+//方法二
+2.使用reactive，
+let list = reactive({arr: [xx,xx,xx]});
+list.arr //使用方式
 ```
+
+6、分页模糊查询
+
+一、使用mybatis，使用sql语句实现
+
+二、使用mybatis-plus实现
+
+引入依赖
+
+安装分页插件
+
+7、集成swaggerUI
+
+代替postman进行接口测试
 

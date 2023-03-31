@@ -1,5 +1,8 @@
 package com.yhh.springboot.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +13,9 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName(value = "user_info")
 public class User {
+    @TableId(value = "id")
     private Integer id;
     private String username;
     //不展示密码
@@ -20,5 +25,7 @@ public class User {
     private String email;
     private String phone;
     private String address;
+    //指定数据库的字段名称,驼峰命名也可以
+    @TableField(value = "creat_time")
     private Date creat_time;
 }

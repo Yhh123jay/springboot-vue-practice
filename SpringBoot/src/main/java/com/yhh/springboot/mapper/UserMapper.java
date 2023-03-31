@@ -1,10 +1,11 @@
 package com.yhh.springboot.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yhh.springboot.entity.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-public interface UserMapper{
+public interface UserMapper extends BaseMapper<User> {
     //查询所有用户
     @Select("select * from user_info")
     List<User> selectAll();
