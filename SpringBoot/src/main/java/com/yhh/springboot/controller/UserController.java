@@ -28,7 +28,7 @@ public class UserController {
     //新增和修改
     @PostMapping
     public boolean saveUser(@RequestBody User user){
-        return userService.save(user);
+        return userService.saveUser(user);
     }
 
     //删除
@@ -36,7 +36,11 @@ public class UserController {
     public boolean deleteUser(@PathVariable("id") Integer id){
         return userService.removeById(id);
     }
-
+    //批量删除
+    @DeleteMapping("/delete/batch")
+    public boolean deleteBatch(@RequestBody List<Integer> ids){
+        return userService.removeByIds(ids);
+    }
     //分页查询,通过sql语句来实现
     //接口路径：/user/page?pageNum=1&pageSize=10
     //使用RequestParam接受参数
@@ -44,7 +48,7 @@ public class UserController {
     @GetMapping("/page")
     public IPage<User> queryUserWithPage(@RequestParam("pageNum") Integer pageNum,
                                          @RequestParam(value = "pageSize") Integer pageSize,
-                                         @RequestParam(value = "userName",defaultValue = "") String userName,
+                                         @RequestParam(value = "username",defaultValue = "") String userName,
                                          @RequestParam(value = "email",defaultValue = "") String email,
                                          @RequestParam(value = "address",defaultValue = "") String address){
         return userService.queryUserWithPage(pageNum,pageSize,userName,email,address);

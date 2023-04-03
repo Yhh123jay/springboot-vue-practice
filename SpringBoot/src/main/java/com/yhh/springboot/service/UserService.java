@@ -17,14 +17,14 @@ import java.util.Map;
 //service层，表示具体业务的实现层，一般要编写接口
 @Service
 public class UserService extends ServiceImpl<UserMapper,User>{
-
-//    @Autowired
-//    private UserMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     //查询所有数据
     public List<User> selectAll(){
-        return selectAll();
+        return userMapper.selectAll();
     }
+
 
     //表示User用户的新增和更新
 //    public int save(User user){
@@ -55,9 +55,10 @@ public class UserService extends ServiceImpl<UserMapper,User>{
     public IPage<User> queryUserWithPage(Integer pageNum, Integer pageSize, String userName,String email,String address){
         IPage<User> page = new Page<>(pageNum,pageSize);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        if(!"".equals(userName)){
-            queryWrapper.like("username",userName);
-        }
+//        if(!"".equals(userName)){
+//            queryWrapper.like("username",userName);
+//        }
+        queryWrapper.like(Strings.isNotEmpty(userName),"username",userName);
         queryWrapper.like(Strings.isNotEmpty(email),"email",email);
         queryWrapper.like(Strings.isNotEmpty(address),"address",address);
         return page(page,queryWrapper);
