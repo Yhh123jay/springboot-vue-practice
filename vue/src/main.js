@@ -16,5 +16,4 @@ app.use(ElementPlus,{size:"small"})
 app.use(router)
 //app.config.globalProperties.Axios = Axios
 app.config.globalProperties.$request = request;
-
 app.mount('#app')

@@ -77,3 +77,74 @@ list.arr //使用方式
 
 8、axios发送ajax请求
 
+安装axios
+
+配置封装axios
+
+request.js
+
+```js
+import axios from 'axios'
+
+const request = axios.create({
+    baseURL: '/api',
+    timeout: 5000
+})
+
+//拦截器
+//添加一个请求拦截器
+axios.interceptors.request.use(config => {
+    //config.headers.languagetype = 'CN'; // 举例，加上一个公共头部
+    //config.data = Qs.stringify(config.data); // 处理数据，可不写
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  });
+
+//添加一个响应拦截器
+axios.interceptors.response.use(res => {
+  //在这里对返回的数据进行处理
+  console.log(res.data, '网络正常');
+  return res.data;
+}, err => {
+  console.log('网络开了小差！请重试...');
+  return Promise.reject(err);
+})
+
+export default request 
+```
+
+全局引入
+
+```js
+import request from '@/utils/request'
+app.config.globalProperties.$request = request;
+```
+
+使用
+
+```js
+import {getCurrentInstance} from 'vue'
+const currentInstance = getCurrentInstance()
+const {$request} = currentInstance.appContext.config.globalProperties;
+
+$request.get("/user/page",{
+        params: {
+          pageNum: currentPage.value,
+          pageSize: pageSize.value,
+          username: username.value,
+          email: email.value,
+          address: address.value
+        }
+    }).then(res =>res.data)
+      .then(res =>{
+        // console.log(res)
+        // console.log(username)
+        tableData.value = res.records;
+        total.value = res.total;
+    })
+```
+
+9、Vue使用路由
+
